@@ -1,4 +1,7 @@
-public class tets { 
-    console.log("Hello World");
+public class tets {
+
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
 
 }
