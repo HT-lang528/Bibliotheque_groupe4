@@ -43,9 +43,4 @@ public class Collection {
         this.nom = nom;
     }
 
-    @Override
-    public String toString() {
-        return "Collection [id=" + id + ", nom=" + nom + "]";
-    }
-
 }
