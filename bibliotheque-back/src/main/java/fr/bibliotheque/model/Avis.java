@@ -34,6 +34,8 @@ public class Avis {
     @JoinColumn(name="livre")
     Livre livre;
 
+
+    public Avis() {}
     public Avis(Integer id, double note, String commentaire, LocalDate date, Livre livre) {
         this.id = id;
         this.note = note;
@@ -81,9 +83,6 @@ public class Avis {
     public void setLivre(Livre livre) {
         this.livre = livre;
     }
-
-    
-
 
 
 

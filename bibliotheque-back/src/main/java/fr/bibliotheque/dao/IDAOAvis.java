@@ -6,6 +6,5 @@ import fr.bibliotheque.model.Avis;
 
 
 public interface IDAOAvis extends JpaRepository<Avis, Integer> {
-
-
+    
 }
