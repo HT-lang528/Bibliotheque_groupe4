@@ -1,6 +1,6 @@
 package fr.bibliotheque.model;
 
-import org.hibernate.annotations.Audited.Table;
+import jakarta.persistence.Table;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
