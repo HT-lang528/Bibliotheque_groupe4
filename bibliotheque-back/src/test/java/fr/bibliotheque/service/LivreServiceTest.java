@@ -12,130 +12,203 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
-import fr.bibliotheque.entity.Livre;
-import fr.bibliotheque.repository.LivreRepository;
+import fr.bibliotheque.dao.IDAOAuteur;
+import fr.bibliotheque.dao.IDAOCollection;
+import fr.bibliotheque.dao.IDAOEditeur;
+import fr.bibliotheque.dao.IDAOLivre;
+import fr.bibliotheque.model.Auteur;
+import fr.bibliotheque.model.Collection;
+import fr.bibliotheque.model.Editeur;
+import fr.bibliotheque.model.Livre;
 
-// Test unitaire : aucun démarrage de Spring ni connexion à MySQL.
+// Le service est réel, ses accès à la base sont simulés.
 @ExtendWith(MockitoExtension.class)
 class LivreServiceTest {
+    @Mock private IDAOLivre daoLivre;
+    @Mock private IDAOAuteur daoAuteur;
+    @Mock private IDAOEditeur daoEditeur;
+    @Mock private IDAOCollection daoCollection;
+    @InjectMocks private LivreService livreService;
 
-    // Mockito remplace le repository par un objet dont on contrôle les réponses.
-	
-    @Mock
-    private LivreRepository livreRepository;
+    private Livre livreAvecRelations() {
+        Livre livre = new Livre("Le Petit Prince", "Un voyage", 1943);
+        Auteur auteur = new Auteur();
+        auteur.setId(1);
+        Editeur editeur = new Editeur();
+        editeur.setId(2);
+        livre.setAuteur(auteur);
+        livre.setEditeur(editeur);
+        return livre;
+    }
 
-    // Le vrai service reçoit ce repository simulé.
-    @InjectMocks
-    private LivreService livreService;
+    private void simulerRelationsConnues() {
+        Auteur auteur = new Auteur(1, "Française", "de Saint-Exupéry", "Antoine");
+        Editeur editeur = new Editeur(2, "Gallimard", "France");
+        when(daoAuteur.findById(1)).thenReturn(Optional.of(auteur));
+        when(daoEditeur.findById(2)).thenReturn(Optional.of(editeur));
+    }
 
     @Test
     void findAllRetourneLesLivres() {
-    	
-        // Préparer : définir ce que le repository doit renvoyer.
-        Livre premier = new Livre("Le Petit Prince", "Un voyage entre les planètes", 1943);
-        Livre second = new Livre("Vingt mille lieues sous les mers", "Une aventure sous-marine", 1870);
-        when(livreRepository.findAll()).thenReturn(List.of(premier, second));
-
-        // Agir : appeler la méthode du service.
-        List<Livre> resultat = livreService.findAll();
-
-        // Vérifier : contrôler le résultat.
-        assertEquals(2, resultat.size());
-        assertEquals("Le Petit Prince", resultat.get(0).getTitre());
-        assertEquals("Vingt mille lieues sous les mers", resultat.get(1).getTitre());
+        Livre livre = livreAvecRelations();
+        when(daoLivre.findAll()).thenReturn(List.of(livre));
+        assertEquals(List.of(livre), livreService.findAll());
     }
 
     @Test
     void findByIdRetourneLeLivreExistant() {
-        Livre livre = new Livre("Le Petit Prince", "Un voyage", 1943);
-        livre.setId(1L);
-        when(livreRepository.findById(1L)).thenReturn(Optional.of(livre));
-
-        Livre resultat = livreService.findById(1L);
-
-        assertEquals(1L, resultat.getId());
-        assertEquals("Le Petit Prince", resultat.getTitre());
+        Livre livre = livreAvecRelations();
+        livre.setId(1);
+        when(daoLivre.findById(1)).thenReturn(Optional.of(livre));
+        assertEquals(1, livreService.findById(1).getId());
     }
 
     @Test
     void findByIdSignaleUnLivreIntrouvable() {
-        when(livreRepository.findById(99L)).thenReturn(Optional.empty());
-
-        IllegalArgumentException erreur = assertThrows(
-                IllegalArgumentException.class,
-                () -> livreService.findById(99L));
-
+        when(daoLivre.findById(99)).thenReturn(Optional.empty());
+        IllegalArgumentException erreur = assertThrows(IllegalArgumentException.class,
+                () -> livreService.findById(99));
         assertEquals("Livre introuvable : 99", erreur.getMessage());
     }
 
     @Test
-    void createIgnoreLIdentifiantFourniEtRetourneLeLivreEnregistre() {
-        Livre livre = new Livre("Le Petit Prince", "Un voyage", 1943);
-        livre.setId(99L);
-
-        // Vérifie l'objet envoyé au repository, puis simule l'identifiant généré.
-        when(livreRepository.save(any(Livre.class))).thenAnswer(invocation -> {
+    void createIgnoreLIdFourniEtRechargeLesRelations() {
+        Livre livre = livreAvecRelations();
+        livre.setId(99);
+        livre.setCollection(new Collection(3, null));
+        simulerRelationsConnues();
+        when(daoCollection.findById(3)).thenReturn(Optional.of(new Collection(3, "Folio")));
+        when(daoLivre.save(any(Livre.class))).thenAnswer(invocation -> {
             Livre aEnregistrer = invocation.getArgument(0);
-            assertNull(aEnregistrer.getId(), "Une création ne doit pas réutiliser l'id fourni");
-            aEnregistrer.setId(2L);
+            assertNull(aEnregistrer.getId());
+            aEnregistrer.setId(10);
             return aEnregistrer;
         });
 
         Livre resultat = livreService.create(livre);
 
-        assertEquals(2L, resultat.getId());
-        assertEquals("Le Petit Prince", resultat.getTitre());
-        verify(livreRepository).save(livre);
+        assertEquals(10, resultat.getId());
+        assertEquals("de Saint-Exupéry", resultat.getAuteur().getNom());
+        assertEquals("Gallimard", resultat.getEditeur().getNom());
+        assertEquals("Folio", resultat.getCollection().getNom());
     }
 
     @Test
-    void updateModifieLesChampsEtConserveLIdentifiantExistant() {
-        Livre existant = new Livre("Ancien titre", "Ancien résumé", 1900);
-        existant.setId(1L);
-        Livre modifications = new Livre("Nouveau titre", "Nouveau résumé", 2000);
-        modifications.setId(99L);
-        when(livreRepository.findById(1L)).thenReturn(Optional.of(existant));
-        when(livreRepository.save(existant)).thenReturn(existant);
-
-        Livre resultat = livreService.update(1L, modifications);
-
-        assertEquals(1L, resultat.getId(), "L'id de l'URL désigne le livre à modifier");
-        assertEquals("Nouveau titre", resultat.getTitre());
-        assertEquals("Nouveau résumé", resultat.getResume());
-        assertEquals(2000, resultat.getAnnee());
-        verify(livreRepository).save(existant);
+    void createAccepteUneCollectionAbsente() {
+        Livre livre = livreAvecRelations();
+        simulerRelationsConnues();
+        when(daoLivre.save(livre)).thenReturn(livre);
+        assertNull(livreService.create(livre).getCollection());
+        verifyNoInteractions(daoCollection);
     }
 
     @Test
-    void updateNeCreePasUnLivreSiLIdentifiantNExistePas() {
-        when(livreRepository.findById(99L)).thenReturn(Optional.empty());
-        Livre modifications = new Livre("Un titre", "Un résumé", 2000);
+    void updateConserveLIdEtMetAJourLesRelations() {
+        Livre existant = livreAvecRelations();
+        existant.setId(5);
+        existant.setCollection(new Collection(3, "Folio"));
+        Livre modifications = livreAvecRelations();
+        modifications.setId(99);
+        modifications.setTitre("Titre corrigé");
+        modifications.setResume("Résumé corrigé");
+        modifications.setAnnee(1944);
+        when(daoLivre.findById(5)).thenReturn(Optional.of(existant));
+        simulerRelationsConnues();
+        when(daoLivre.save(existant)).thenReturn(existant);
 
+        Livre resultat = livreService.update(5, modifications);
+
+        assertEquals(5, resultat.getId());
+        assertEquals("Titre corrigé", resultat.getTitre());
+        assertEquals("Résumé corrigé", resultat.getResume());
+        assertEquals(1944, resultat.getAnnee());
+        assertEquals("Gallimard", resultat.getEditeur().getNom());
+        assertNull(resultat.getCollection(), "La collection facultative peut être retirée");
+    }
+
+    @Test
+    void updateNeCreePasUnLivreAbsent() {
+        when(daoLivre.findById(99)).thenReturn(Optional.empty());
         assertThrows(IllegalArgumentException.class,
-                () -> livreService.update(99L, modifications));
-
-        verify(livreRepository, never()).save(any(Livre.class));
+                () -> livreService.update(99, livreAvecRelations()));
+        verify(daoLivre, never()).save(any());
+        verifyNoInteractions(daoAuteur, daoEditeur, daoCollection);
     }
 
     @Test
-    void deleteSupprimeLeLivreExistant() {
-        Livre livre = new Livre("Le Petit Prince", "Un voyage", 1943);
-        livre.setId(1L);
-        when(livreRepository.findById(1L)).thenReturn(Optional.of(livre));
+    void createRefuseUnAuteurInconnu() {
+        when(daoAuteur.findById(1)).thenReturn(Optional.empty());
+        assertThrows(IllegalArgumentException.class,
+                () -> livreService.create(livreAvecRelations()));
+        verify(daoLivre, never()).save(any());
+    }
 
-        livreService.delete(1L);
+    @Test
+    void createRefuseUnEditeurInconnu() {
+        when(daoAuteur.findById(1)).thenReturn(Optional.of(new Auteur()));
+        when(daoEditeur.findById(2)).thenReturn(Optional.empty());
+        assertThrows(IllegalArgumentException.class,
+                () -> livreService.create(livreAvecRelations()));
+        verify(daoLivre, never()).save(any());
+    }
 
-        verify(livreRepository).delete(livre);
+    @Test
+    void createRefuseUneCollectionInconnue() {
+        Livre livre = livreAvecRelations();
+        livre.setCollection(new Collection(99, null));
+        simulerRelationsConnues();
+        when(daoCollection.findById(99)).thenReturn(Optional.empty());
+        assertThrows(IllegalArgumentException.class, () -> livreService.create(livre));
+        verify(daoLivre, never()).save(any());
+    }
+
+    @Test
+    void createRefuseUnAuteurSansIdentifiant() {
+        Livre livre = livreAvecRelations();
+        livre.getAuteur().setId(null);
+        ResponseStatusException erreur = assertThrows(ResponseStatusException.class,
+                () -> livreService.create(livre));
+        assertEquals(HttpStatus.BAD_REQUEST, erreur.getStatusCode());
+        verifyNoInteractions(daoLivre, daoAuteur, daoEditeur, daoCollection);
+    }
+
+    @Test
+    void createRefuseUnEditeurAbsent() {
+        Livre livre = livreAvecRelations();
+        livre.setEditeur(null);
+        assertThrows(ResponseStatusException.class, () -> livreService.create(livre));
+        verifyNoInteractions(daoLivre, daoAuteur, daoEditeur, daoCollection);
+    }
+
+    @Test
+    void createRefuseUneCollectionSansIdentifiant() {
+        Livre livre = livreAvecRelations();
+        livre.setCollection(new Collection());
+        simulerRelationsConnues();
+        ResponseStatusException erreur = assertThrows(ResponseStatusException.class,
+                () -> livreService.create(livre));
+        assertEquals(HttpStatus.BAD_REQUEST, erreur.getStatusCode());
+        verify(daoLivre, never()).save(any());
+    }
+
+    @Test
+    void deleteSupprimeSeulementLeLivre() {
+        Livre livre = livreAvecRelations();
+        when(daoLivre.findById(1)).thenReturn(Optional.of(livre));
+        livreService.delete(1);
+        verify(daoLivre).delete(livre);
+        verify(daoLivre).flush();
+        verifyNoInteractions(daoAuteur, daoEditeur, daoCollection);
     }
 
     @Test
     void deleteSignaleUnLivreIntrouvableSansSupprimer() {
-        when(livreRepository.findById(99L)).thenReturn(Optional.empty());
-
-        assertThrows(IllegalArgumentException.class,
-                () -> livreService.delete(99L));
-
-        verify(livreRepository, never()).delete(any(Livre.class));
+        when(daoLivre.findById(99)).thenReturn(Optional.empty());
+        assertThrows(IllegalArgumentException.class, () -> livreService.delete(99));
+        verify(daoLivre, never()).delete(any(Livre.class));
+        verify(daoLivre, never()).flush();
     }
 }

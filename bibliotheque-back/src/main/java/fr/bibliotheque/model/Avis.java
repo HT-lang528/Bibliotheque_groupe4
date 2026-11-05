@@ -10,7 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -30,9 +30,9 @@ public class Avis {
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private LocalDate date;
     
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="livre")
-    Livre livre;
+    private Livre livre;
 
 
     public Avis() {}

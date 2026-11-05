@@ -1,23 +1,24 @@
-package fr.bibliotheque.controller;
+package fr.bibliotheque.restcontroller;
 
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import fr.bibliotheque.entity.Livre;
+import fr.bibliotheque.model.Livre;
 import fr.bibliotheque.service.LivreService;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/livres")
-public class LivreController {
+@RequestMapping({"/api/livre", "/api/livres"})
+public class LivreRestController {
 
     private final LivreService livreService;
 
-    public LivreController(LivreService livreService) {
+    public LivreRestController(LivreService livreService) {
         this.livreService = livreService;
     }
 
@@ -27,7 +28,7 @@ public class LivreController {
     }
 
     @GetMapping("/{id}")
-    public Livre findById(@PathVariable Long id) {
+    public Livre findById(@PathVariable Integer id) {
         return livreService.findById(id);
     }
 
@@ -39,7 +40,7 @@ public class LivreController {
 
     @PutMapping("/{id}")
     public Livre update(
-            @PathVariable Long id,
+            @PathVariable Integer id,
             @Valid @RequestBody Livre livre) {
 
         return livreService.update(id, livre);
@@ -47,7 +48,7 @@ public class LivreController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable Integer id) {
         livreService.delete(id);
     }
 
@@ -58,5 +59,11 @@ public class LivreController {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(exception.getMessage());
+    }
+    // Une suppression ne doit pas effacer les avis ou les entités des collègues.
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleConflitDeDonnees(DataIntegrityViolationException exception) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body("Opération impossible : vérifie les données et les liens du livre (notamment ses avis).");
     }
 }
