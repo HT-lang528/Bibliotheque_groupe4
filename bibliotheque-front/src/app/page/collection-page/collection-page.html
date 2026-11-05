@@ -1,0 +1,42 @@
+<h1>Liste des collections</h1>
+
+<form (submit)="ajouterOuModifier()" [formGroup]="formFormationGroup">
+  <div>
+    
+    <input type="text" [formControl]="formFormationNomCtrl" />
+  </div>
+
+  @if (formFormationNomCtrl.dirty && formFormationNomCtrl.hasError('required')) {
+    <div>
+      Le libellé est obligatoire !
+    </div>
+  }
+
+  <div>
+    <button [disabled]="formCollectionGroup.invalid" type="submit">Ajouter</button>
+  </div>
+</form>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Libellé</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    @for (collection of (collections$ | async); track collection.id) {
+      <tr>
+        <td>{{ collection.id }}</td>
+        <td>{{ collection.nom }}</td>
+        <td>
+          <button (click)="editer(collection)">Editer</button>
+          <button (click)="supprimer(collection)">Supprimer</button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+
