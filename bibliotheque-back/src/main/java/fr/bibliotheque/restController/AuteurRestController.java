@@ -1,4 +1,4 @@
-package fr.bibliotheque.restController;
+package fr.bibliotheque.restcontroller;
 
 import java.util.List;
 
