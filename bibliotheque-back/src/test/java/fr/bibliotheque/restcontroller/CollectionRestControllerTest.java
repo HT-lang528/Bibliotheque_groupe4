@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import fr.bibliotheque.restController.CollectionRestController;
 import fr.bibliotheque.dao.IDAOCollection;
 import fr.bibliotheque.model.Collection;
 
