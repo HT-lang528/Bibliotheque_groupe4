@@ -1,4 +1,4 @@
-package fr.formation.config;
+package fr.bibliotheque.config;
 
 import java.nio.charset.StandardCharsets;
 
