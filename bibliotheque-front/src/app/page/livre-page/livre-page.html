@@ -1,0 +1,61 @@
+<section class="livre-page" aria-labelledby="livres-title">
+  <div class="page-heading">
+    <div><p class="eyebrow">CATALOGUE / GESTION DES LIVRES</p><h1 id="livres-title">Les livres<span>.</span></h1></div>
+    <button type="button" class="secondary" (click)="refresh(); loadReferences()" [disabled]="loading() || saving()">Actualiser</button>
+  </div>
+
+  @if (error()) { <p class="message error" role="alert">{{ error() }}</p> }
+  @if (notice()) { <p class="message success" role="status">{{ notice() }}</p> }
+
+  <div class="table-heading"><h2>Le catalogue</h2><span>{{ livres().length }} livre(s)</span></div>
+  <div class="table-scroll" role="region" aria-label="Catalogue des livres" tabindex="0">
+    <table>
+      <caption class="sr-only">Titre, résumé, année et références des livres</caption>
+      <thead><tr><th scope="col">Titre</th><th scope="col">Résumé</th><th scope="col">Année</th><th scope="col">Auteur</th><th scope="col">Éditeur</th><th scope="col">Collection</th><th scope="col">Actions</th></tr></thead>
+      <tbody>
+        @for (livre of livres(); track livre.id) {
+          <tr>
+            <th scope="row"><span class="book-id">#{{ livre.id }}</span>{{ livre.titre }}</th>
+            <td class="summary">{{ livre.resume || '—' }}</td><td>{{ livre.annee ?? '—' }}</td>
+            <td><span class="reference auteur">{{ livre.auteur.prenom }} {{ livre.auteur.nom }}</span></td>
+            <td><span class="reference editeur">{{ livre.editeur.nom }}</span></td>
+            <td>@if (livre.collection) { <span class="reference collection">{{ livre.collection.nom }}</span> } @else { <span class="muted">Sans collection</span> }</td>
+            <td><div class="actions"><button type="button" class="secondary" (click)="edit(livre)" [disabled]="saving()" [attr.aria-label]="'Modifier ' + livre.titre">Modifier</button><button type="button" class="danger" (click)="requestDelete(livre)" [disabled]="saving()" [attr.aria-label]="'Supprimer ' + livre.titre">Supprimer</button></div></td>
+          </tr>
+        } @empty {
+          <tr><td colspan="7" class="empty">{{ loading() ? 'Chargement du catalogue…' : error() ? 'Le catalogue ne peut pas être affiché.' : 'Aucun livre pour le moment. Ajoute le premier ci-dessous.' }}</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <section class="editor" aria-labelledby="form-title">
+    <div class="form-heading"><div><p class="eyebrow">{{ editingId() === undefined ? 'NOUVELLE ENTRÉE' : 'MODIFICATION / #' + editingId() }}</p><h2 id="form-title">{{ editingId() === undefined ? 'Ajouter un livre' : 'Modifier le livre' }}</h2></div><p>Le titre, l’auteur et l’éditeur sont obligatoires.</p></div>
+    @if (referenceError()) { <p class="message error" role="alert">{{ referenceError() }}</p> }
+    @if (references(); as refs) {
+      @if (!refs.auteurs.length || !refs.editeurs.length) { <p class="message">Un auteur et un éditeur doivent d’abord être créés dans leurs espaces respectifs.</p> }
+    }
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <fieldset [disabled]="saving() || !references()">
+        <div class="form-grid">
+          <div class="field wide"><label for="livre-titre">Titre *</label><input id="livre-titre" formControlName="titre" maxlength="255" required aria-describedby="titre-error">
+            @if (form.controls.titre.touched && form.controls.titre.invalid) { <small id="titre-error" class="field-error">Un titre non vide est obligatoire (255 caractères maximum).</small> }
+          </div>
+          <div class="field wide"><label for="livre-resume">Résumé</label><textarea id="livre-resume" formControlName="resume" rows="3"></textarea></div>
+          <div class="field"><label for="livre-annee">Année</label><input id="livre-annee" type="number" formControlName="annee" min="0" max="9999" step="1">
+            @if (form.controls.annee.touched && form.controls.annee.invalid) { <small class="field-error">Indique une année entière entre 0 et 9999.</small> }
+          </div>
+          <div class="field"><label for="livre-auteur">Auteur *</label><select id="livre-auteur" formControlName="auteurId" required><option [ngValue]="null">Choisir un auteur</option>@for (auteur of references()?.auteurs; track auteur.id) { <option [ngValue]="auteur.id">{{ auteur.prenom }} {{ auteur.nom }}</option> }</select></div>
+          <div class="field"><label for="livre-editeur">Éditeur *</label><select id="livre-editeur" formControlName="editeurId" required><option [ngValue]="null">Choisir un éditeur</option>@for (editeur of references()?.editeurs; track editeur.id) { <option [ngValue]="editeur.id">{{ editeur.nom }}</option> }</select></div>
+          <div class="field"><label for="livre-collection">Collection</label><select id="livre-collection" formControlName="collectionId"><option [ngValue]="null">Sans collection</option>@for (collection of references()?.collections; track collection.id) { <option [ngValue]="collection.id">{{ collection.nom }}</option> }</select></div>
+        </div>
+        <div class="form-actions"><button class="primary" type="submit" [disabled]="form.invalid || saving() || !references()">{{ saving() ? 'Enregistrement…' : editingId() === undefined ? 'Ajouter le livre' : 'Enregistrer les modifications' }}</button><button type="button" class="secondary" (click)="cancelEdit()">{{ editingId() === undefined ? 'Effacer' : 'Annuler la modification' }}</button></div>
+      </fieldset>
+    </form>
+  </section>
+
+  <dialog #deleteDialog aria-labelledby="delete-title" (cancel)="pendingDelete.set(null)">
+    <h2 id="delete-title">Supprimer ce livre ?</h2><p>« {{ pendingDelete()?.titre }} » sera supprimé du catalogue.</p><p class="muted">Ses auteurs, son éditeur et sa collection seront conservés.</p>
+    <div class="form-actions"><button type="button" class="secondary" (click)="cancelDelete()" [disabled]="saving()" autofocus>Annuler</button><button type="button" class="danger" (click)="confirmDelete()" [disabled]="saving()">{{ saving() ? 'Suppression…' : 'Confirmer la suppression' }}</button></div>
+  </dialog>
+</section>
