@@ -2,21 +2,23 @@ import { AsyncPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-import { Observable, startWith, Subject, switchMap } from 'rxjs';
+import { finalize, Observable, startWith, Subject, switchMap } from 'rxjs';
 import { Collection } from '../../model/collection';
 import { CollectionService } from '../../service/collection-service';
 
 @Component({
-  selector: 'app-matiere-page',
+  selector: 'app-collection-page',
   imports: [ ReactiveFormsModule, AsyncPipe ],
   templateUrl: './collection-page.html',
   styleUrl: './collection-page.css',
 })
 export class CollectionPage implements OnInit {
-  protected matieres$!: Observable<Collection[]>;
+  protected collections$!: Observable<Collection[]>;
   private refresh$: Subject<void> = new Subject<void>(); // Permettra de garder la même référence à l'Observable et alimenter le flux dès qu'un changement sera réalisé
 
   protected editingCollectionId?: number;
+  protected saving = false;
+  protected erreur = "";
   protected formCollectionGroup!: FormGroup;
   protected formCollectionNomCtrl!: FormControl
 
@@ -36,7 +38,7 @@ export class CollectionPage implements OnInit {
       nom: this.formCollectionNomCtrl
     });
 
-    this.matieres$ = this.refresh$.pipe(
+    this.collections$ = this.refresh$.pipe(
       // On initialise notre Observable
       startWith(null),
 
@@ -48,7 +50,7 @@ export class CollectionPage implements OnInit {
   }
 
   protected ajouterOuModifier() {
-    if (this.formCollectionGroup.invalid) {
+    if (this.formCollectionGroup.invalid || this.saving) {
       return;
     }
 
@@ -59,12 +61,15 @@ export class CollectionPage implements OnInit {
       id: this.editingCollectionId
     };
 
-    this.collectionService.save(collection).subscribe(() => {
-    
-      this.refresh$.next();
+    this.saving = true;
+    this.erreur = "";
+    this.collectionService.save(collection).pipe(finalize(() => this.saving = false)).subscribe({
+      next: () => {
+        this.annulerEdition();
+        this.refresh$.next();
+      },
+      error: () => this.erreur = "Enregistrement impossible. Vérifie l’accès au serveur et les données.",
     });
-
-    this.formCollectionGroup.reset();
   }
 
   protected editer(collection: Collection) {
