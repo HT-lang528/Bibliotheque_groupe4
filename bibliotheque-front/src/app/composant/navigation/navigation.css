@@ -1,0 +1,21 @@
+nav {
+    background: radial-gradient(ellipse at center, #f4e8c8 0%, #e6d3a3 70%, #c9b27a 100%);
+ 
+     box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.45),          /* ombre portée sur la page */
+    inset 0 1px 0 rgba(255, 255, 255, 0.08); /* léger reflet en haut */
+  color: #f3e6c8;
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 30px;
+    display: flex;
+    
+  
+    
+}
+nav a {
+    color:brown;
+    font-family: 'Great Vibes', cursive;
+}

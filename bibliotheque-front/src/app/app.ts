@@ -1,8 +1,8 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-
+import { Navigation } from './composant/navigation/navigation';
 @Component({
-  imports: [RouterOutlet],
+  imports: [RouterOutlet,Navigation],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',
