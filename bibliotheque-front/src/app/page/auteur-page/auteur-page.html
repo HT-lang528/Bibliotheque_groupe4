@@ -1,1 +1,42 @@
-<p>auteur-page works!</p>
+<p>Liste des Auteurs</p>
+<div>
+    <div>
+        
+    </div>
+
+
+
+<table>
+    <thead>
+
+        <tr>
+            <th>Nom</th>
+            <th>Prenom</th>
+            <th>nationalite</th>
+
+
+        </tr>
+    </thead>
+<tbody>
+    @for(auteur of auteurs.value();track auteur.id){
+
+        <tr>
+        <td>{{ auteur.nom }}</td>
+        <td>{{ auteur.prenom }}</td>
+        <td>{{ auteur.nationalite }}</td>
+        
+      </tr>
+
+
+
+    }
+
+
+</tbody>
+
+
+
+</table>
+
+
+</div>
