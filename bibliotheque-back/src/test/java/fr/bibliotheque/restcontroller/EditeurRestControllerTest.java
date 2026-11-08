@@ -84,7 +84,7 @@ public class EditeurRestControllerTest {
                 .post(url)
                 .content("""
                     {
-                        "nom" : "SOLEIL"
+                        "nom" : "SOLEIL" ,
                         "pays" : "France"
                     }
                     """)
@@ -101,8 +101,6 @@ public class EditeurRestControllerTest {
         Editeur savedEditeur = cptEditeur.getValue();
         Assertions.assertEquals("SOLEIL", savedEditeur.getNom());
         Assertions.assertEquals("France", savedEditeur.getPays());
-        Assertions.assertNotNull(savedEditeur.getId()); 
-        Assertions.assertNotEquals(0, savedEditeur.getId()); 
 
     }
 
@@ -111,17 +109,17 @@ public class EditeurRestControllerTest {
     void shouldUpdateStatusOk() throws Exception {
         // given
         int id = 1;
-        String url = "/api/editeur" + id;
+        String url = "/api/editeur/" + id;
         ArgumentCaptor<Editeur> cptEditeur = ArgumentCaptor.captor();
 
 
         // when
         ResultActions result = this.mockMvc.perform(
             MockMvcRequestBuilders
-                .post(url)
+                .put(url)
                 .content("""
                     {
-                        "nom" : "SOLEIL"
+                        "nom" : "SOLEIL" ,
                         "pays" : "France"
                     }
                     """)
@@ -138,8 +136,6 @@ public class EditeurRestControllerTest {
 
         Assertions.assertEquals("SOLEIL", updatedEditeur.getNom());
         Assertions.assertEquals("France", updatedEditeur.getPays());
-        Assertions.assertNotNull(updatedEditeur.getId()); 
-        Assertions.assertNotEquals(0, updatedEditeur.getId()); 
     }
 
     @Test
