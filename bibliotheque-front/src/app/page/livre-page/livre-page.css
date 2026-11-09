@@ -1,1 +1,43 @@
-:host{display:block;color:#21322f;font-family:Arial,sans-serif}.livre-page{max-width:1400px;margin:auto;padding:40px 5% 64px}.page-heading,.table-heading,.form-heading{display:flex;justify-content:space-between;align-items:center;gap:20px}.page-heading{margin-bottom:32px}.eyebrow{font:10px monospace;letter-spacing:2px;color:#60736d}h1{font-family:Georgia,serif;font-size:clamp(42px,6vw,64px);margin:8px 0}h1 span{color:#397d68}h2{font-family:Georgia,serif;font-size:23px;margin:8px 0 18px}.table-heading span,.muted,.form-heading>p{font-size:12px;color:#65736d}.table-scroll{overflow:auto;border:1px solid #d6ded8;background:white}table{width:100%;border-collapse:collapse;min-width:900px;text-align:left}th,td{padding:17px 14px;border-bottom:1px solid #e3e8e3;font-size:13px;line-height:1.6;vertical-align:top}thead th{background:#edf1ed;font-size:10px;text-transform:uppercase;letter-spacing:1px}tbody th{min-width:140px}.book-id{display:block;font:10px monospace;color:#819087}.summary{min-width:150px;max-width:260px;overflow-wrap:anywhere}.reference{display:inline-block;border:1px solid;padding:4px 8px;border-radius:4px;font-size:11px}.auteur{color:#2d6942;background:#eef7ef;border-color:#a7ceaf}.editeur{color:#8b4865;background:#fcf0f5;border-color:#e2b8cc}.collection{color:#466787;background:#eef4fa;border-color:#afc7df}.actions,.form-actions{display:flex;flex-wrap:wrap;gap:9px}button{font:12px Arial;min-height:38px;padding:9px 13px;border:1px solid;border-radius:4px;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}.primary{color:white;background:#2b6956;border-color:#2b6956}.secondary{color:#2f5146;background:white;border-color:#a7b8ad}.danger{color:#963b40;background:#fff7f7;border-color:#d7a7aa}button:hover:not(:disabled){filter:brightness(.95)}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,.table-scroll:focus-visible{outline:3px solid #397d68;outline-offset:3px}.empty{text-align:center;padding:36px;color:#63746c}.editor{background:white;border:1px solid #d6ded8;border-top:3px solid #397d68;margin-top:32px;padding:26px}.form-heading{align-items:start}fieldset{padding:0;margin:0;border:0;min-width:0}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.wide{grid-column:1/-1}.field label{display:block;font-size:12px;margin-bottom:8px}.field input,.field textarea,.field select{box-sizing:border-box;width:100%;padding:11px;border:1px solid #b9c6bc;border-radius:3px;background:#fff;color:#21322f;font:14px Arial}.field textarea{resize:vertical}.form-actions{margin-top:24px}.field-error{display:block;color:#a1323d;font-size:11px;margin-top:7px}.message{padding:13px 16px;border:1px solid #d7cda7;background:#fffbed;font-size:13px;line-height:1.6}.error{border-color:#e3b7bc;background:#fff1f3;color:#8d2d39}.success{border-color:#a6cbb4;background:#eef9f1;color:#2c6845}dialog{max-width:480px;width:80vw;padding:28px;border:1px solid #a7b8ad;border-radius:6px;color:#21322f}dialog::backdrop{background:#172f27a6}dialog p{line-height:1.7;font-size:14px}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}@media(max-width:650px){.livre-page{padding:24px 5%}.form-grid{grid-template-columns:1fr}.form-heading{display:block}.editor{padding:18px}.page-heading{gap:10px}.actions{min-width:85px}}
+:host{display:block;color:#21322f;font-family:Arial,sans-serif}
+.livre-page{max-width:1400px;margin:auto;padding:40px 5% 64px}
+.page-heading,.table-heading,
+.form-heading{display:flex;justify-content:space-between;align-items:center;gap:20px}
+.page-heading{margin-bottom:32px}.eyebrow{font:10px monospace;letter-spacing:2px;color:#60736d}
+h1{font-family:Georgia,serif;font-size:clamp(42px,6vw,64px);margin:8px 0}
+h1 span{color:#397d68}
+h2{font-family:Georgia,serif;font-size:23px;margin:8px 0 18px}
+.table-heading span,.muted,.form-heading>p{font-size:12px;color:#65736d}
+.table-scroll{overflow:auto;border:1px solid #d6ded8;background:white}
+table{width:100%;border-collapse:collapse;min-width:900px;text-align:left}
+th,td{padding:17px 14px;border-bottom:1px solid #e3e8e3;font-size:13px;line-height:1.6;vertical-align:top}
+thead th{background:#edf1ed;font-size:10px;text-transform:uppercase;letter-spacing:1px}
+tbody th{min-width:140px}.book-id{display:block;font:10px monospace;color:#819087}
+.summary{min-width:150px;max-width:260px;overflow-wrap:anywhere}
+.reference{display:inline-block;border:1px solid;padding:4px 8px;border-radius:4px;font-size:11px}
+.auteur{color:#2d6942;background:#eef7ef;border-color:#a7ceaf}.editeur{color:#8b4865;background:#fcf0f5;border-color:#e2b8cc}
+.collection{color:#466787;background:#eef4fa;border-color:#afc7df}
+.actions,.form-actions{display:flex;flex-wrap:wrap;gap:9px}
+button{font:12px Arial;min-height:38px;padding:9px 13px;border:1px solid;border-radius:4px;cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}.primary{color:white;background:#2b6956;border-color:#2b6956}
+.secondary{color:#2f5146;background:white;border-color:#a7b8ad}
+.danger{color:#963b40;background:#fff7f7;border-color:#d7a7aa}
+button:hover:not(:disabled){filter:brightness(.95)}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,.table-scroll:focus-visible{outline:3px solid #397d68;outline-offset:3px}
+.empty{text-align:center;padding:36px;color:#63746c}
+.editor{background:white;border:1px solid #d6ded8;border-top:3px solid #397d68;margin-top:32px;padding:26px}.form-heading{align-items:start}
+fieldset{padding:0;margin:0;border:0;min-width:0}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.wide{grid-column:1/-1}
+.field label{display:block;font-size:12px;margin-bottom:8px}
+.field input,.field textarea,.field select{box-sizing:border-box;width:100%;padding:11px;border:1px solid #b9c6bc;border-radius:3px;background:#fff;color:#21322f;font:14px Arial}
+.field textarea{resize:vertical}.form-actions{margin-top:24px}.field-error{display:block;color:#a1323d;font-size:11px;margin-top:7px}
+.message{padding:13px 16px;border:1px solid #d7cda7;background:#fffbed;font-size:13px;line-height:1.6}
+.error{border-color:#e3b7bc;background:#fff1f3;color:#8d2d39}
+.success{border-color:#a6cbb4;background:#eef9f1;color:#2c6845}dialog{max-width:480px;width:80vw;padding:28px;border:1px solid #a7b8ad;border-radius:6px;color:#21322f}
+dialog::backdrop{background:#172f27a6}dialog p{line-height:1.7;font-size:14px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}@media(max-width:650px)
+{.livre-page{padding:24px 5%}.form-grid{grid-template-columns:1fr}
+.form-heading{display:block}
+.editor{padding:18px}
+.page-heading{gap:10px}
+.actions{min-width:85px}}
