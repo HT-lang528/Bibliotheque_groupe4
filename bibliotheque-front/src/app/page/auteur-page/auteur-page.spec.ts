@@ -1,3 +1,5 @@
+import { of } from 'rxjs';
+import { AuteurService } from '../../service/auteur-service';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AuteurPage } from './auteur-page';
 
@@ -7,6 +9,7 @@ describe('AuteurPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      providers: [{ provide: AuteurService, useValue: { findAll: () => of([]) } }],
       imports: [AuteurPage],
     }).compileComponents();
 

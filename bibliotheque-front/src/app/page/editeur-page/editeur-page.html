@@ -1,8 +1,8 @@
 <h1>Liste des Editeurs</h1>
 
-<form (submit)="ajouterOuModifier()" [formGroup]="EditeurFormulaire">
+<form (ngSubmit)="ajouterOuModifier()" #EditeurFormulaire="ngForm">
   <div>
-    <input type="text" [formControl]="formEditeurNomControl" />
+    <input type="text" name="nom" [(ngModel)]="formEditeur.nom" #formEditeurNomControl="ngModel" required aria-label="Nom de l’éditeur" />
   </div>
 
   @if (formEditeurNomControl.dirty && formEditeurNomControl.hasError('required')) {
@@ -12,7 +12,7 @@
   }
 
     <div>
-        <input type="text" [formControl]="formEditeurPaysControl" />
+        <input type="text" name="pays" [(ngModel)]="formEditeur.pays" #formEditeurPaysControl="ngModel" required aria-label="Pays de l’éditeur" />
     </div>
 
   @if (formEditeurPaysControl.dirty && formEditeurPaysControl.hasError('required')) {
@@ -40,7 +40,7 @@
   </thead>
 
   <tbody>
-    @for (editeur of (XXXX | async); track editeur.id) {
+    @for (editeur of editeurs.value() ?? []; track editeur.id) {
       <tr>
         <td>{{ editeur.id }}</td>
         <td>{{ editeur.nom }}</td>

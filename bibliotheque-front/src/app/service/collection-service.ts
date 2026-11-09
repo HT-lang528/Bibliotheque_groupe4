@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class CollectionService {
-  private apiUrl: string = "/collection";
+  private apiUrl: string = "/api/collection";
   private http: HttpClient = inject(HttpClient);
 
   public findAll(): Observable<Collection[]> {

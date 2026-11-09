@@ -8,7 +8,7 @@ import { Editeur } from "../model/editeur";
   providedIn: 'root',
 })
 export class EditeurService {
-  private apiUrl: string = "/editeur";
+  private apiUrl: string = "/api/editeur";
   private http: HttpClient = inject(HttpClient);
 
   public findAll(): Observable<Editeur[]> {

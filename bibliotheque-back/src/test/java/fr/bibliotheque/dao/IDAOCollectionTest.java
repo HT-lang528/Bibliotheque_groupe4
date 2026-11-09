@@ -22,25 +22,24 @@ public class IDAOCollectionTest {
         "Poche"
     })
 
-    @Test
-    void TestFindById() {
+    void TestFindById(String nom) {
         
         Collection collection = new Collection();
-        collection.setNom("Dico");
+        collection.setNom(nom);
 
         Collection saved = this.dao.save(collection);
         Optional<Collection> opt = this.dao.findById(saved.getId());
 
         Assertions.assertNotNull(saved.getId()); 
         Assertions.assertTrue(opt.isPresent());
-        Assertions.assertEquals("Dico", opt.get().getNom());
+        Assertions.assertEquals(nom, opt.get().getNom());
     }
 
      @Test
     void TestFindAll() {
 
-        this.dao.save(new Collection());
-        this.dao.save(new Collection());
+        this.dao.save(new Collection(null, "Dico"));
+        this.dao.save(new Collection(null, "Poche"));
 
         Assertions.assertEquals(2, this.dao.findAll().size());
     }

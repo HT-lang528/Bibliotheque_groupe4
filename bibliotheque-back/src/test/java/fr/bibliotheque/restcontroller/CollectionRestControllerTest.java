@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import fr.bibliotheque.restcontroller.CollectionRestController;
 import fr.bibliotheque.dao.IDAOCollection;
 import fr.bibliotheque.model.Collection;
 
@@ -76,6 +77,13 @@ public class CollectionRestControllerTest {
         // given
         String url = "/api/collection";
         ArgumentCaptor<Collection> cptCollection = ArgumentCaptor.captor();
+        // Le mock n'a pas de base : on simule explicitement l'id généré par JPA.
+        Mockito.when(this.dao.save(Mockito.any(Collection.class))).thenAnswer(invocation -> {
+            Collection collection = invocation.getArgument(0);
+            Assertions.assertNull(collection.getId());
+            collection.setId(1);
+            return collection;
+        });
 
         // when
         ResultActions result = this.mockMvc.perform(
@@ -98,8 +106,8 @@ public class CollectionRestControllerTest {
       
         Collection savedCollection = cptCollection.getValue();
         Assertions.assertEquals("TEST DE CREATION", savedCollection.getNom());
-        //Assertions.assertNotNull(savedCollection.getId()); 
-        //Assertions.assertNotEquals(0, savedCollection.getId()); 
+        Assertions.assertNotNull(savedCollection.getId()); 
+        Assertions.assertNotEquals(0, savedCollection.getId()); 
     }
 
     @Test

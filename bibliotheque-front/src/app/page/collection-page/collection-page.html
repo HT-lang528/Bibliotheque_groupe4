@@ -1,21 +1,24 @@
 <h1>Liste des collections</h1>
-<!--
-<form (submit)="ajouterOuModifier()" [formGroup]="formFormationGroup">
+
+<form (ngSubmit)="ajouterOuModifier()" [formGroup]="formCollectionGroup">
   <div>
     
-    <input type="text" [formControl]="formFormationNomCtrl" />
+    <label for="collection-nom">Nom de la collection</label>
+    <input id="collection-nom" type="text" [formControl]="formCollectionNomCtrl" />
   </div>
 
-  @if (formFormationNomCtrl.dirty && formFormationNomCtrl.hasError('required')) {
+  @if (formCollectionNomCtrl.dirty && formCollectionNomCtrl.hasError('required')) {
     <div>
       Le libellé est obligatoire !
     </div>
   }
 
   <div>
-    <button [disabled]="formCollectionGroup.invalid" type="submit">Ajouter</button>
+    <button [disabled]="formCollectionGroup.invalid || saving" type="submit">{{ editingCollectionId === undefined ? "Ajouter" : "Modifier" }}</button>
+    <button type="button" (click)="annulerEdition()" [disabled]="saving">Annuler</button>
   </div>
 </form>
+@if (erreur) { <p role="alert">{{ erreur }}</p> }
 
 <table>
   <thead>
@@ -40,4 +43,3 @@
   </tbody>
 </table>
 
--->
