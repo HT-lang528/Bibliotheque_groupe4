@@ -1,0 +1,206 @@
+
+:host {
+  display: block;
+  color: #21322f;
+  font-family: Arial, sans-serif;
+  max-width: 1100px;
+  margin: auto;
+  padding: 40px 5% 64px;
+}
+
+/* ---------- Titre ---------- */
+h1 {
+  font-family: Georgia, serif;
+  font-size: clamp(36px, 5vw, 56px);
+  margin: 0 0 28px;
+  color: #21322f;
+}
+
+/* ---------- Formulaire ---------- */
+form {
+  background: white;
+  border: 1px solid #d6ded8;
+  border-top: 3px solid #397d68;
+  margin-bottom: 32px;
+  padding: 24px;
+}
+
+form > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 12px;
+}
+
+label {
+  font-size: 12px;
+  font-weight: bold;
+  color: #3d514a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+input[type="text"] {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 450px;
+  padding: 11px;
+  border: 1px solid #b9c6bc;
+  border-radius: 3px;
+  background: #fff;
+  color: #21322f;
+  font: 14px Arial;
+}
+
+input:focus-visible {
+  outline: 3px solid #397d68;
+  outline-offset: 2px;
+  border-color: #397d68;
+}
+
+/* Message d'erreur */
+form > div:nth-child(2) {
+  color: #963b40;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+/* ---------- Boutons ---------- */
+button {
+  font: 12px Arial;
+  min-height: 36px;
+  padding: 8px 13px;
+  margin-right: 6px;
+  border: 1px solid;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s, filter 0.2s;
+}
+
+button:hover:not(:disabled) {
+  filter: brightness(0.95);
+}
+
+button:focus-visible {
+  outline: 3px solid #397d68;
+  outline-offset: 2px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Ajouter / Modifier */
+form button[type="submit"] {
+  color: white;
+  background: #2b6956;
+  border-color: #2b6956;
+  margin-top: 8px;
+}
+
+/* Annuler */
+form button[type="button"] {
+  color: #2f5146;
+  background: white;
+  border-color: #a7b8ad;
+  margin-top: 8px;
+}
+
+/* ---------- Message d'erreur général ---------- */
+p[role="alert"] {
+  color: #963b40;
+  background: #fff7f7;
+  border: 1px solid #d7a7aa;
+  border-left: 3px solid #963b40;
+  padding: 12px 15px;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+/* ---------- Tableau ---------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border: 1px solid #d6ded8;
+  text-align: left;
+}
+
+th,
+td {
+  padding: 15px 14px;
+  border-bottom: 1px solid #e3e8e3;
+  font-size: 13px;
+  line-height: 1.6;
+  vertical-align: middle;
+}
+
+thead th {
+  background: #edf1ed;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #3d514a;
+}
+
+tbody tr:hover {
+  background: #f6f9f6;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Colonne ID */
+td:first-child {
+  color: #718078;
+  width: 80px;
+  font-size: 12px;
+}
+
+/* ---------- Boutons du tableau ---------- */
+
+/* Éditer */
+td button:nth-child(1) {
+  color: #2f5146;
+  background: white;
+  border-color: #a7b8ad;
+}
+
+/* Supprimer */
+td button:nth-child(2) {
+  color: #963b40;
+  background: #fff7f7;
+  border-color: #d7a7aa;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 650px) {
+  :host {
+    padding: 24px 5%;
+  }
+
+  h1 {
+    font-size: 36px;
+  }
+
+  form {
+    padding: 18px;
+  }
+
+  input[type="text"] {
+    max-width: 100%;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  td,
+  th {
+    padding: 12px 10px;
+  }
+}
