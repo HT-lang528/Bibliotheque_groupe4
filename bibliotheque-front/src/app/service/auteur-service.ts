@@ -8,8 +8,8 @@ import { Livre } from '../model/livre';
   providedIn: 'root',
 })
 export class AuteurService {
-    private apiUrl:string="http://localhost:8080/api/auteur";
-    private apiUrlLivre:string="http://localhost:8080/api/livre/auteur";
+    private apiUrl:string="/api/auteur";
+    private apiUrlLivre:string="/api/livre/auteur";
     private http: HttpClient = inject(HttpClient);
     
     public findAll(): Observable<Auteur[]> {
