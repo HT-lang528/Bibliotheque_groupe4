@@ -20,7 +20,11 @@
             <td><span class="reference auteur">{{ livre.auteur.prenom }} {{ livre.auteur.nom }}</span></td>
             <td><span class="reference editeur">{{ livre.editeur.nom }}</span></td>
             <td>@if (livre.collection) { <span class="reference collection">{{ livre.collection.nom }}</span> } @else { <span class="muted">Sans collection</span> }</td>
-            <td><div class="actions"><button type="button" class="secondary" (click)="edit(livre)" [disabled]="saving()" [attr.aria-label]="'Modifier ' + livre.titre">Modifier</button><button type="button" class="danger" (click)="requestDelete(livre)" [disabled]="saving()" [attr.aria-label]="'Supprimer ' + livre.titre">Supprimer</button></div></td>
+            <td><div class="actions">
+              <button type="button" class="secondary" (click)="edit(livre)" [disabled]="saving()" [attr.aria-label]="'Modifier ' + livre.titre">Modifier</button>
+              <button type="button" class="danger" (click)="requestDelete(livre)" [disabled]="saving()" [attr.aria-label]="'Supprimer ' + livre.titre">Supprimer</button>
+              <button type="button" class="secondary" (click)="voirAvis(livre.id)" [attr.aria-label]="'Voir les avis de ' + livre.titre"> Voir les avis </button>
+            </div></td>
           </tr>
         } @empty {
           <tr><td colspan="7" class="empty">{{ loading() ? 'Chargement du catalogue…' : error() ? 'Le catalogue ne peut pas être affiché.' : 'Aucun livre pour le moment. Ajoute le premier ci-dessous.' }}</td></tr>

@@ -10,4 +10,5 @@ export const routes: Routes = [
   { path: 'editeur', component: EditeurPage },
   { path: 'livres', loadComponent: () => import('./page/livre-page/livre-page').then(m => m.LivrePage) },
   { path: 'collection', loadComponent: () => import('./page/collection-page/collection-page').then(m => m.CollectionPage) },
+  {path: 'avis/:idLivre',loadComponent: () => import('./page/avis-page/avis-page').then(m => m.AvisPage)},
 ];

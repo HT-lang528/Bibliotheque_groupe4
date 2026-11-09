@@ -1,5 +1,6 @@
 package fr.bibliotheque.restcontroller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,11 @@ public class AvisRestController {
 		return daoAvis.findById(id).orElse(null);
 	}
 
+	@GetMapping("/livre/{id}")
+	public List<Avis> getAvisByLivre(@PathVariable Integer id) {
+		return daoAvis.findByLivreId(id);
+	}
+
 	@DeleteMapping("/{id}")
 	public void supprimer(@PathVariable Integer id)
 	{
@@ -42,6 +48,7 @@ public class AvisRestController {
 	@PostMapping
 	public Avis ajouter(@RequestBody Avis avis)
 	{
+		avis.setDate(LocalDate.now());
 		daoAvis.save(avis);
 		return avis;
 	}
@@ -50,6 +57,7 @@ public class AvisRestController {
 	public Avis modifier(@PathVariable Integer id,@RequestBody Avis avis)
 	{
 	  avis.setId(id);
+	  avis.setDate(LocalDate.now());
       daoAvis.save(avis);
       return avis;
 	}

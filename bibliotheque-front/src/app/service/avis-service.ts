@@ -7,7 +7,7 @@ import { Avis } from '../model/avis';
 export class AvisService {
 //   private apiUrl: string = "/avis";
   private http: HttpClient = inject(HttpClient);
-  private apiUrl: string = "http://localhost:8080/api/matiere";
+  private apiUrl: string = "/api/avis";
 
   public findAll(): Observable<Avis[]> {
     return this.http.get<Avis[]>(this.apiUrl);
@@ -23,5 +23,9 @@ export class AvisService {
 
   public remove(avis: Avis): Observable<void> {
     return this.http.delete<void>(`${ this.apiUrl }/${ avis.id }`);
+  }
+
+  public findByLivreId(idLivre: number): Observable<Avis[]> {
+    return this.http.get<Avis[]>(`${this.apiUrl}/livre/${idLivre}`);
   }
 }

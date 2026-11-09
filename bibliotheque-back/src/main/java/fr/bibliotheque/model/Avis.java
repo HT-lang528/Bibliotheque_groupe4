@@ -24,14 +24,14 @@ public class Avis {
     @Column(nullable = false)
     private double note;
 
-    @Column(length = 25,nullable = false)
+    @Column(length = 200,nullable = false)
     private String commentaire;
     
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private LocalDate date;
     
     @ManyToOne
-    @JoinColumn(name="livre")
+    @JoinColumn(name="livre_id")
     private Livre livre;
 
 

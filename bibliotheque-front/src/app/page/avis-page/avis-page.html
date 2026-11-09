@@ -1,56 +1,85 @@
-<h1>Liste des avis</h1>
+<main class="avis-page">
+<h1>Avis du livre</h1>
 
-<form (submit)="ajouterOuModifier()" [formGroup]="formAvisGrp">
+<section class="liste-avis">
+<h2>Les avis des lecteurs</h2>
+@if (avis$ | async; as avisList) {
+  @if (avisList.length > 0) {
+    <table>
+      <thead>
+        <tr>
+          <th>Commentaire</th>
+          <th>Note</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (avis of avisList; track avis.id) {
+          <tr>
+            <td>{{ avis.commentaire }}</td>
+            <td>{{ avis.note }}/5</td>
+            <td>{{ avis.date }}</td>
+            <td>
+              <button type="button" (click)="editer(avis)">Modifier</button>
+              <button type="button" (click)="supprimer(avis)">Supprimer</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <p>Aucun avis pour ce livre pour le moment.</p>
+  }
+}
+</section>
+
+<section class="form-avis">
+<h2>{{ editingAvisId === undefined ? 'Ajouter un avis' : 'Modifier un avis' }}</h2>
+<form [formGroup]="formAvisGrp" (ngSubmit)="ajouterOuModifier()">
+
+  
   <div>
-    <input type="text" formControlName="commentaire" />
-    <!-- <input type="text" [formControl]="formAvisCommentaireCtrl" /> -->
+  <label for="note">Note (sur 5)</label>
+  <div class="stars">
+    @for (n of [1, 2, 3, 4, 5]; track n) {
+      <button
+        type="button"
+        (click)="formAvisNoteCtrl.setValue(n)"
+        [class.selected]="n <= formAvisNoteCtrl.value">
+        ★
+      </button>
+    }
+  </div>
+
+  <div>
+    <label for="commentaire">Commentaire</label>
+    <textarea
+      id="commentaire"
+      formControlName="commentaire"
+      placeholder="Votre commentaire..."
+      rows="3">
+    </textarea>
   </div>
 
   @if (formAvisCommentaireCtrl.dirty && formAvisCommentaireCtrl.hasError('required')) {
-    <div>
-      Commentaire obligatoire !
-    </div>
+    <p>Commentaire obligatoire !</p>
   }
 
-  <div>
-    <input type="number" formControlName="note" />
-    <!-- <input type="number" [formControl]="formAvisNoteCtrl" /> -->
   </div>
 
   @if (formAvisNoteCtrl.dirty && formAvisNoteCtrl.hasError('required')) {
-    <div>
-      Note obligatoire !
-    </div>
+    <p>Note obligatoire !</p>
   }
 
-  <div>
-    <button [disabled]="formAvisGrp.invalid" type="submit">Ajouter</button>
-  </div>
+  <button type="submit" [disabled]="formAvisGrp.invalid">
+    {{ editingAvisId === undefined ? 'Publier mon avis' : 'Enregistrer' }}
+  </button>
+
+  @if (editingAvisId !== undefined) {
+    <button type="button" (click)="annulerEdition()">Annuler</button>
+  }
 </form>
-
-<table>
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Commentaire</th>
-      <th>Note</th>
-      <th>Date</th>
-      <th></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    @for (avis of (avis$ | async); track avis.id) {
-      <tr>
-        <td>{{ avis.id }}</td>
-        <td>{{ avis.commentaire }}</td>
-        <td>{{ avis.note }}</td>
-        <td>{{ avis.date }}</td>
-        <td>
-          <button (click)="editer(avis)">Editer</button>
-          <button (click)="supprimer(avis)">Supprimer</button>
-        </td>
-      </tr>
-    }
-  </tbody>
-</table>
+</section>
+</main>

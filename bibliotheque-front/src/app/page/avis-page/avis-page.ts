@@ -5,6 +5,8 @@ import { Title } from '@angular/platform-browser';
 import { Observable, startWith, Subject, switchMap } from 'rxjs';
 import { Avis } from '../../model/avis';
 import { AvisService } from '../../service/avis-service';
+import { ActivatedRoute } from '@angular/router';
+import { Livre } from '../../model/livre';
 
 @Component({
   imports: [ ReactiveFormsModule, AsyncPipe ],
@@ -26,9 +28,11 @@ export class AvisPage implements OnInit{
   constructor(
     private title: Title,
     private avisService: AvisService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private route: ActivatedRoute //permet de lire les paramètres de l'URL
   ) { }
 
+  
   ngOnInit(): void {
     this.title.setTitle("Liste des avis");
 
@@ -40,23 +44,29 @@ export class AvisPage implements OnInit{
       note : this.formAvisNoteCtrl
     });
 
+    const idLivre = Number(this.route.snapshot.paramMap.get('idLivre'));
+
     this.avis$ = this.refresh$.pipe(
       // On initialise notre Observable
       startWith(null),
       // Fonction qui sera déclenchée dès qu'une nouvelle valeur dans le flux arrivera
       switchMap(()=>{
-        return this.avisService.findAll();
+        return this.avisService.findByLivreId(idLivre);
       })
     )
   }
 
-  protected ajouterOuModifier(){
+  protected ajouterOuModifier() {
     if (this.formAvisGrp.invalid) {
-    return;
-  }
+      return;
+    }
+
+    const idLivre = Number(this.route.snapshot.paramMap.get('idLivre'));
+
     const avis: Avis = {
       ...this.formAvisGrp.getRawValue(),
-      id: this.editingAvisId
+      id: this.editingAvisId!,
+      livre: { id: idLivre } as Livre
     };
 
     this.avisService.save(avis).subscribe(() => {
@@ -64,6 +74,7 @@ export class AvisPage implements OnInit{
     });
 
     this.formAvisGrp.reset();
+    this.editingAvisId = undefined;
   }
 
   protected editer(avis: Avis) {
