@@ -1,0 +1,19 @@
+<h1>Connexion</h1>
+
+<form [formGroup]="formAuth" (ngSubmit)="login()">
+  <div>
+    <input type="text" placeholder="Utilisateur" formControlName="username" />
+    @if (formAuth.controls.username.invalid && formAuth.controls.username.touched) {
+      <small style="color: red">Le nom d'utilisateur est obligatoire.</small>
+    }
+  </div>
+
+  <div>
+    <input type="password" placeholder="Mot de passe" formControlName="password" />
+    @if (formAuth.controls.password.invalid && formAuth.controls.password.touched) {
+      <small style="color: red">Le mot de passe est obligatoire.</small>
+    }
+  </div>
+
+  <button type="submit" [disabled]="formAuth.invalid">Connexion</button>
+</form>

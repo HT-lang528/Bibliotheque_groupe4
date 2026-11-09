@@ -2,9 +2,11 @@ import { Routes } from '@angular/router';
 import { AuteurPage } from './page/auteur-page/auteur-page';
 import { HomePage } from './page/home-page/home-page';
 import { EditeurPage } from './page/editeur-page/editeur-page';
+import { LoginPage } from './page/login-page/login-page';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'home' },
+  { path: '', pathMatch: 'full', redirectTo: 'login' },
+  { path: 'login', component: LoginPage},
   { path: 'home', component: HomePage },
   { path: 'auteur', component: AuteurPage },
   { path: 'editeur', component: EditeurPage },
