@@ -6,5 +6,5 @@ import fr.bibliotheque.model.Editeur;
 
 
 public interface IDAOEditeur extends JpaRepository<Editeur, Integer> {
-
+	//public List<Livre> findByEditeur(Editeur editeur);
 }
