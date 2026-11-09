@@ -35,6 +35,24 @@ public class LivreService {
         return daoLivre.findAll();
     }
 
+//Permet d'afficher tout les livres qui sont concerné par l'éditeur sélectionné
+    @Transactional(readOnly = true)    
+    public List<Livre> findByEditeurId(Number id){
+        return daoLivre.findByEditeurId(id);
+    }
+
+//Permet d'afficher tout les livres qui sont concerné par l'auteur sélectionné
+    @Transactional(readOnly = true)    
+    public List<Livre> findByAuteurId(Number id){
+        return daoLivre.findByAuteurId(id);
+    }
+
+//Permet d'afficher tout les livres qui sont concerné par la collection sélectionnée
+    @Transactional(readOnly = true)    
+    public List<Livre> findByCollectionId(Number id){
+        return daoLivre.findByCollectionId(id);
+    }
+
     @Transactional(readOnly = true)
     public Livre findById(Integer id) {
         return daoLivre.findById(id).orElseThrow(

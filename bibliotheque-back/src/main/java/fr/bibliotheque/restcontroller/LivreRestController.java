@@ -2,11 +2,13 @@ package fr.bibliotheque.restcontroller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import fr.bibliotheque.dao.IDAOEditeur;
 import fr.bibliotheque.model.Livre;
 import fr.bibliotheque.service.LivreService;
 
@@ -25,6 +27,24 @@ public class LivreRestController {
     @GetMapping
     public List<Livre> findAll() {
         return livreService.findAll();
+    }
+
+//Permet d'afficher tout les livres qui sont concerné par l'éditeur sélectionné
+   @GetMapping("/editeur/{id}")
+    public List<Livre> findByEditeurId(@PathVariable Integer id) {
+        return livreService.findByEditeurId(id);
+    }
+
+//Permet d'afficher tout les livres qui sont concerné par l'auteur sélectionné
+   @GetMapping("/auteur/{id}")
+    public List<Livre> findByAuteurId(@PathVariable Integer id) {
+        return livreService.findByAuteurId(id);
+    }
+
+//Permet d'afficher tout les livres qui sont concerné par la collection sélectionnée
+   @GetMapping("/collection/{id}")
+    public List<Livre> findByCollectionId(@PathVariable Integer id) {
+        return livreService.findByCollectionId(id);
     }
 
     @GetMapping("/{id}")
