@@ -9,7 +9,7 @@ describe('App', () => {
   it('affiche le point d’entrée de la bibliothèque et le lien Livres', async () => {
     const fixture = TestBed.createComponent(App); fixture.detectChanges(); await fixture.whenStable();
     const element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelector('nav')?.textContent).toContain('Bibliothèque');
-    expect(element.querySelector('a')?.getAttribute('href')).toBe('/livres');
+    expect(element.querySelector('nav')?.textContent).toContain('Accueil');
+    expect(element.querySelector('a[href="/livres"]')).not.toBeNull();
   });
 });

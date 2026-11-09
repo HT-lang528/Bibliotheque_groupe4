@@ -85,7 +85,8 @@ public class SecurityConfig {
             // authorize.requestMatchers("/api/auth/**").permitAll();
 
             // Tout le reste il faut être authentifié
-            authorize.requestMatchers("/api/**").authenticated();
+            //authorize.requestMatchers("/api/**").authenticated();
+            authorize.requestMatchers("/api/**").permitAll(); // pour l'instant permis a tt le monde 
         });
 
         // Reconfiguration d'un formulaire de connexion
