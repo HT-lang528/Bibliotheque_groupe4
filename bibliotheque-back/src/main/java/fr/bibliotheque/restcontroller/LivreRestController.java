@@ -2,13 +2,11 @@ package fr.bibliotheque.restcontroller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import fr.bibliotheque.dao.IDAOEditeur;
 import fr.bibliotheque.model.Livre;
 import fr.bibliotheque.service.LivreService;
 

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,6 +21,7 @@ import fr.bibliotheque.dao.IDAOCollection;
 import fr.bibliotheque.dao.IDAOEditeur;
 import fr.bibliotheque.dao.IDAOLivre;
 import fr.bibliotheque.model.Auteur;
+
 import fr.bibliotheque.model.Collection;
 import fr.bibliotheque.model.Editeur;
 import fr.bibliotheque.model.Livre;
@@ -211,4 +213,65 @@ class LivreServiceTest {
         verify(daoLivre, never()).delete(any(Livre.class));
         verify(daoLivre, never()).flush();
     }
+
+    @Test
+    void shouldfindByEditeurIdStatusOk() {
+         // given
+        int id = 1;
+
+        List<Livre> livres = List.of(new Livre());
+
+        Mockito.when(this.daoLivre.findByEditeurId(id))
+            .thenReturn(livres);
+
+        // when
+        List<Livre> resultat = this.livreService.findByEditeurId(id);
+
+        // then
+        assertNotNull(resultat);
+        assertEquals(1, resultat.size());
+
+        Mockito.verify(this.daoLivre).findByEditeurId(id);
+    }
+
+        @Test
+    void shouldfindByAuteurIdStatusOk() {
+         // given
+        int id = 1;
+
+        List<Livre> livres = List.of(new Livre());
+
+        Mockito.when(this.daoLivre.findByAuteurId(id))
+            .thenReturn(livres);
+
+        // when
+        List<Livre> resultat = this.livreService.findByAuteurId(id);
+
+        // then
+        assertNotNull(resultat);
+        assertEquals(1, resultat.size());
+
+        Mockito.verify(this.daoLivre).findByAuteurId(id);
+    }
+
+    @Test
+    void shouldfindByCollectionIdStatusOk() {
+         // given
+        int id = 1;
+
+        List<Livre> livres = List.of(new Livre());
+
+        Mockito.when(this.daoLivre.findByCollectionId(id))
+            .thenReturn(livres);
+
+        // when
+        List<Livre> resultat = this.livreService.findByCollectionId(id);
+
+        // then
+        assertNotNull(resultat);
+        assertEquals(1, resultat.size());
+
+        Mockito.verify(this.daoLivre).findByCollectionId(id);
+    }
+
 }
