@@ -1,10 +1,4 @@
 <p>Liste des Auteurs</p>
-<div>
-    <div>
-        
-    </div>
-
-
 
 <table>
     <thead>
@@ -24,6 +18,10 @@
         <td>{{ auteur.nom }}</td>
         <td>{{ auteur.prenom }}</td>
         <td>{{ auteur.nationalite }}</td>
+        <td>
+          <button (click)="editer(auteur)">Editer</button>
+          <button (click)="supprimer(auteur)">Supprimer</button>
+        </td>
         
       </tr>
 
@@ -38,5 +36,21 @@
 
 </table>
 
+<div>
+    <div>
+        <input type="text" [(ngModel)]="formAuteur.nom" />
+        <input type="text" [(ngModel)]="formAuteur.prenom" />
+        <input type="text" [(ngModel)]="formAuteur.nationalite" />
+    </div>
+
+<div>
+    <div>
+    <button (click)="ajouterOuModifier()">{{ formAuteur.id ? 'Modifier' : 'Ajouter' }}</button>
+
+    @if (formAuteur.id) {
+      <button (click)="annulerEdition()">Annuler</button>
+    }
+  </div>
+</div>
 
 </div>
