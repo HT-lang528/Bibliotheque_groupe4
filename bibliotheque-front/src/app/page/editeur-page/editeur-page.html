@@ -1,5 +1,31 @@
 <h1>Liste des Editeurs</h1>
 
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nom</th>
+      <th>Pays</th>
+      <th></th>
+    </tr>
+  </thead>
+
+<tbody>
+    @for (editeur of editeurs.value() ?? []; track editeur.id) {
+      <tr class="editeur">
+        <td>{{ editeur.id }}</td>
+        <td>{{ editeur.nom }}</td>
+        <td>{{ editeur.pays }}</td>
+        <td>
+          <button (click)="editer(editeur)">Editer</button>
+          <button (click)="supprimer(editeur)">Supprimer</button>
+           <button type="button" disabled title="Affichage des livres par éditeur en cours de développement">Voir les livres</button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+
 <form (ngSubmit)="ajouterOuModifier()" #EditeurFormulaire="ngForm">
   <div>
     <input type="text" name="nom" [(ngModel)]="formEditeur.nom" #formEditeurNomControl="ngModel" required aria-label="Nom de l’éditeur" />
@@ -29,28 +55,5 @@
 
 
 
-<table>
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Nom</th>
-      <th>Pays</th>
-      <th></th>
-    </tr>
-  </thead>
 
-  <tbody>
-    @for (editeur of editeurs.value() ?? []; track editeur.id) {
-      <tr>
-        <td>{{ editeur.id }}</td>
-        <td>{{ editeur.nom }}</td>
-        <td>{{ editeur.pays }}</td>
-        <td>
-          <button (click)="editer(editeur)">Editer</button>
-          <button (click)="supprimer(editeur)">Supprimer</button>
-        </td>
-      </tr>
-    }
-  </tbody>
-</table>
 

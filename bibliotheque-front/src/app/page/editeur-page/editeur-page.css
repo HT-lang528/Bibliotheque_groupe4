@@ -1,0 +1,58 @@
+:host{display:block;color:#21322f;font-family:Arial,sans-serif;max-width:1100px;margin:auto;padding:40px 5% 64px}
+
+h1{font-family:Georgia,serif;font-size:clamp(36px,5vw,56px);margin:0 0 28px}
+
+/* ---------- Tableau ---------- */
+table{width:100%;border-collapse:collapse;background:white;border:1px solid #d6ded8;text-align:left}
+th,td{padding:15px 14px;border-bottom:1px solid #e3e8e3;font-size:13px;line-height:1.6;vertical-align:middle}
+thead th{background:#edf1ed;font-size:10px;text-transform:uppercase;letter-spacing:1px}
+
+tr.auteur:hover{background:#f6f9f6}
+
+/* Lignes de livres (le déroulant) */
+tr.livre td{
+  background:#f4f8f5;
+  padding:12px 14px 12px 40px;
+  color:#3d514a;
+  border-left:3px solid #397d68;
+}
+
+/* ---------- Boutons ---------- */
+button{font:12px Arial;min-height:36px;padding:8px 13px;margin-right:6px;border:1px solid;border-radius:4px;cursor:pointer}
+button:hover{filter:brightness(.95)}
+button:focus-visible,input:focus-visible{outline:3px solid #397d68;outline-offset:2px}
+
+/* Dans le tableau : Éditer / Supprimer / Voir les livres */
+td button:nth-child(1){color:#2f5146;background:white;border-color:#a7b8ad}
+td button:nth-child(2){color:#963b40;background:#fff7f7;border-color:#d7a7aa}
+td button:nth-child(3){color:white;background:#2b6956;border-color:#2b6956}
+
+/* ---------- Formulaire (le div sous le tableau) ---------- */
+table + div{
+  background:white;
+  border:1px solid #d6ded8;
+  border-top:3px solid #397d68;
+  margin-top:32px;
+  padding:24px;
+}
+
+input[type="text"]{
+  box-sizing:border-box;
+  padding:11px;
+  margin:0 10px 10px 0;
+  border:1px solid #b9c6bc;
+  border-radius:3px;
+  background:#fff;
+  color:#21322f;
+  font:14px Arial;
+}
+
+/* Boutons Ajouter / Modifier / Annuler (hors tableau) */
+table + div button{color:white;background:#2b6956;border-color:#2b6956;margin-top:8px}
+table + div button:nth-child(2){color:#2f5146;background:white;border-color:#a7b8ad}
+
+@media(max-width:650px){
+  :host{padding:24px 5%}
+  table{display:block;overflow-x:auto}
+  input[type="text"]{width:100%;margin-right:0}
+}
