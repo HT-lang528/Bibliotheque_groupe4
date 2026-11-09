@@ -1,0 +1,56 @@
+<h1>Liste des avis</h1>
+
+<form (submit)="ajouterOuModifier()" [formGroup]="formAvisGrp">
+  <div>
+    <input type="text" formControlName="commentaire" />
+    <!-- <input type="text" [formControl]="formAvisCommentaireCtrl" /> -->
+  </div>
+
+  @if (formAvisCommentaireCtrl.dirty && formAvisCommentaireCtrl.hasError('required')) {
+    <div>
+      Commentaire obligatoire !
+    </div>
+  }
+
+  <div>
+    <input type="number" formControlName="note" />
+    <!-- <input type="number" [formControl]="formAvisNoteCtrl" /> -->
+  </div>
+
+  @if (formAvisNoteCtrl.dirty && formAvisNoteCtrl.hasError('required')) {
+    <div>
+      Note obligatoire !
+    </div>
+  }
+
+  <div>
+    <button [disabled]="formAvisGrp.invalid" type="submit">Ajouter</button>
+  </div>
+</form>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Commentaire</th>
+      <th>Note</th>
+      <th>Date</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    @for (avis of (avis$ | async); track avis.id) {
+      <tr>
+        <td>{{ avis.id }}</td>
+        <td>{{ avis.commentaire }}</td>
+        <td>{{ avis.note }}</td>
+        <td>{{ avis.date }}</td>
+        <td>
+          <button (click)="editer(avis)">Editer</button>
+          <button (click)="supprimer(avis)">Supprimer</button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
