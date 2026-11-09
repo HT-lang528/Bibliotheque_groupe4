@@ -27,7 +27,31 @@ td button:nth-child(1){color:#2f5146;background:white;border-color:#a7b8ad}
 td button:nth-child(2){color:#963b40;background:#fff7f7;border-color:#d7a7aa}
 td button:nth-child(3){color:white;background:#2b6956;border-color:#2b6956}
 
+/* Ajouter / Modifier */
+form button[type="submit"] {
+  color: white;
+  background: #2b6956;
+  border-color: #2b6956;
+  margin-top: 8px;
+}
+
 /* ---------- Formulaire (le div sous le tableau) ---------- */
+form {
+  background: white;
+  border: 1px solid #d6ded8;
+  border-top: 3px solid #397d68;
+  margin-top: 10px;
+  margin-bottom: 32px;
+  padding: 24px;
+}
+
+form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 12px;
+}
+
 table + div{
   background:white;
   border:1px solid #d6ded8;

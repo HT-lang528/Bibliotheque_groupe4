@@ -28,7 +28,7 @@
 
 <form (ngSubmit)="ajouterOuModifier()" #EditeurFormulaire="ngForm">
   <div>
-    <input type="text" name="nom" [(ngModel)]="formEditeur.nom" #formEditeurNomControl="ngModel" required aria-label="Nom de l’éditeur" />
+    <input type="text" placeholder="nom" name="nom" [(ngModel)]="formEditeur.nom" #formEditeurNomControl="ngModel" required aria-label="Nom de l’éditeur" />
   </div>
 
   @if (formEditeurNomControl.dirty && formEditeurNomControl.hasError('required')) {
@@ -38,7 +38,7 @@
   }
 
     <div>
-        <input type="text" name="pays" [(ngModel)]="formEditeur.pays" #formEditeurPaysControl="ngModel" required aria-label="Pays de l’éditeur" />
+        <input type="text" placeholder="pays"  name="pays" [(ngModel)]="formEditeur.pays" #formEditeurPaysControl="ngModel" required aria-label="Pays de l’éditeur" />
     </div>
 
   @if (formEditeurPaysControl.dirty && formEditeurPaysControl.hasError('required')) {
@@ -49,6 +49,7 @@
 
   <div>
     <button [disabled]="EditeurFormulaire.invalid" type="submit">Ajouter</button>
+    <button type="button" (click)="annulerEdition()" [disabled]="saving">Annuler</button>
   </div>
 
 </form>
