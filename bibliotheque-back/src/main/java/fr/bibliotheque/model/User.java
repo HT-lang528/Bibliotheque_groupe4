@@ -20,6 +20,12 @@ public class User {
     private String password;
 
 
+    @Column(nullable = false, columnDefinition = "varchar(16) default 'USER'")
+    private String role = "USER";
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
+
     public User() {
     }
 

@@ -1,5 +1,6 @@
 <h1>Connexion</h1>
 
+@if (error()) { <p role="alert">{{ error() }}</p> }
 <form [formGroup]="formAuth" (ngSubmit)="login()">
   <div>
     <input type="text" placeholder="Utilisateur" formControlName="username" />
@@ -15,5 +16,6 @@
     }
   </div>
 
-  <button type="submit" [disabled]="formAuth.invalid">Connexion</button>
+  <button type="submit" [disabled]="formAuth.invalid || saving()">Connexion</button>
 </form>
+<p><a routerLink="/inscription">Créer un compte</a></p>

@@ -1,6 +1,12 @@
 package fr.bibliotheque.restcontroller;
 
 import java.time.Instant;
+import java.util.Map;
+import org.springframework.dao.DataIntegrityViolationException;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.security.core.AuthenticationException;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
 
@@ -42,12 +48,16 @@ public class UserRestController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/auth")
-    public String auth(@RequestBody AuthRequest request) {
+    public Map<String, Object> auth(@RequestBody AuthRequest request) {
         // On prépare l'authentification utilisateur
         Authentication auth = new UsernamePasswordAuthenticationToken(request.username(), request.password());
 
         // On demande à Spring Security de vérifier l'authentification
-        auth = this.authenticationManager.authenticate(auth);
+        try {
+            auth = this.authenticationManager.authenticate(auth);
+        } catch (AuthenticationException exception) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Identifiants incorrects");
+        }
 
         // Si tout est OK, "auth" fera référence à l'utilisateur connecté !
         // Si ça n'a pas fonctionné, Erreur 401, la suite ne s'exécutera pas
@@ -83,22 +93,31 @@ public class UserRestController {
         ;
 
         // Génération du jeton JWT avec le JwtEncoder
-        return this.jwtEncoder
+        String token = this.jwtEncoder
             .encode(JwtEncoderParameters.from(header, payload))
             .getTokenValue()
         ;
+        return Map.of("success", true, "token", token);
     }
 
     @PostMapping("/subscribe")
-    public Integer subscribe(@RequestBody SubscribeRequest request) {
+    public Integer subscribe(@Valid @RequestBody SubscribeRequest request) {
+        if (daoUser.findByUsername(request.username()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Identifiant déjà utilisé");
+        }
         User user = new User();
+        user.setRole("USER");
 
         // utilisateur.setUsername(request.getUsername());
         // utilisateur.setPassword(this.passwordEncoder.encode(request.getPassword()));
         user.setUsername(request.username());
         user.setPassword(this.passwordEncoder.encode(request.password()));
 
-        this.daoUser.save(user);
+        try {
+            this.daoUser.save(user);
+        } catch (DataIntegrityViolationException exception) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Identifiant déjà utilisé");
+        }
 
         return user.getId();
     }

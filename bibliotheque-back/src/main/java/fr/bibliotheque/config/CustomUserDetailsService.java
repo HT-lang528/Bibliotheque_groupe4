@@ -15,11 +15,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     private IDAOUser daoUser;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return User
-            .withUsername(username)
-            .password("$2a$10$7LUTWk1B5nqyykF5vUPcF.QD4/8r77GU/BUgAzGUrGC5LY9Ypa7su")
-            .authorities("USER")
-            .build()
-        ;
+        fr.bibliotheque.model.User compte = daoUser.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException("Utilisateur introuvable"));
+        return User.withUsername(compte.getUsername())
+            .password(compte.getPassword())
+            .authorities(compte.getRole())
+            .build();
     }
 }

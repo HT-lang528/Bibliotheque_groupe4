@@ -1,16 +1,32 @@
 import { TestBed } from '@angular/core/testing';
-import { CanActivateFn } from '@angular/router';
+import { ActivatedRouteSnapshot, provideRouter, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { AuthService } from '../service/auth-service';
 import { authGuard } from './auth-guard';
 
 describe('authGuard', () => {
-  const executeGuard: CanActivateFn = (...guardParameters) =>
-    TestBed.runInInjectionContext(() => authGuard(...guardParameters));
+  // Spring valide le JWT ; ce guard vérifie uniquement sa présence.
+  let authService: { token: string };
+  let router: Router;
+  const executeGuard = () => TestBed.runInInjectionContext(() =>
+    authGuard({} as ActivatedRouteSnapshot, { url: '/livres' } as RouterStateSnapshot)
+  );
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    authService = { token: '' };
+    TestBed.configureTestingModule({
+      providers: [provideRouter([]), { provide: AuthService, useValue: authService }],
+    });
+    router = TestBed.inject(Router);
   });
 
-  it('should be created', () => {
-    expect(executeGuard).toBeTruthy();
+  it('redirige vers la connexion quand aucun token n’est présent', () => {
+    const result = executeGuard();
+    expect(result).toBeInstanceOf(UrlTree);
+    expect(router.serializeUrl(result as UrlTree)).toBe('/login');
+  });
+
+  it('autorise la navigation quand un token est présent', () => {
+    authService.token = 'token-fictif-pour-le-test';
+    expect(executeGuard()).toBe(true);
   });
 });

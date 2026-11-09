@@ -1,3 +1,4 @@
+import { AuthService } from '../../service/auth-service';
 import { provideRouter } from '@angular/router';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Navigation } from './navigation';
@@ -8,7 +9,7 @@ describe('Navigation', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      providers: [provideRouter([])],
+      providers: [provideRouter([]), { provide: AuthService, useValue: { token: 'test', logout() {} } }],
       imports: [Navigation],
     }).compileComponents();
 

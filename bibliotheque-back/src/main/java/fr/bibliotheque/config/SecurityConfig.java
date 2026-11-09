@@ -33,13 +33,12 @@ import com.nimbusds.jose.jwk.source.ImmutableSecret;
 // Activer les annotations @PreAuthorize / @PostAuthorize
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
-    private static final String SECRET_KEY = "3f79ae1cb1016bebe4c00a841f8bf0c90b03c2ad896cad9086ae6792ce109549";
+    // Une clé propre au processus, jamais la clé d'exemple partagée dans Git.
+    // Les sessions expirent aussi au redémarrage du serveur.
+    private final SecretKey signingKey = new SecretKeySpec(
+        java.security.SecureRandom.getSeed(32), "HmacSHA256");
 
-    private SecretKey secretKey() {
-        // On transforme le secret en tableau d'octets
-        // On retourne la clé secrète au format Hmac SHA 256
-        return new SecretKeySpec(SECRET_KEY.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
-    }
+    private SecretKey secretKey() { return signingKey; }
 
     // Ce JwtEncoder permettra de générer des jetons JWT, signés avec la clé privée
     @Bean
@@ -63,44 +62,21 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) {
-        // Configuration des autorisations d'accès
+        // Les API utilisent exclusivement le JWT, sans session ni HTTP Basic.
+        http.securityMatcher("/api/**");
+        http.sessionManagement(session -> session.sessionCreationPolicy(
+            org.springframework.security.config.http.SessionCreationPolicy.STATELESS));
         http.authorizeHttpRequests(authorize -> {
-            // !!! L'ordre a une importance ici
-            // Il faut faire de la règle la plus spécifique à la règle la plus générale
-
-            // authorize.requestMatchers("/api/hello").permitAll();
-            // authorize.requestMatchers("/api/hello").authenticated();
-
-            authorize.requestMatchers(HttpMethod.POST, "/api/user/subscribe").permitAll();
-            authorize.requestMatchers("/api/user/jwt").permitAll();
-            authorize.requestMatchers("/api/user/auth").permitAll();
-
-            // /api/hello UNIQUEMENT pour les roles ADMIN
-            // authorize.requestMatchers(HttpMethod.POST, "/api/hello").hasAnyRole("ADMIN");
-            // authorize.requestMatchers("/api/hello/create").hasAnyRole("ADMIN");
-
-            // // /api/hello/quelchose/nimportequoi UNIQUEMENT pour les roles ADMIN et USER
-            // authorize.requestMatchers("/api/hello/**").hasAnyRole("ADMIN", "USER");
-
-            // authorize.requestMatchers("/api/auth/**").permitAll();
-
-            // Tout le reste il faut être authentifié
-            //authorize.requestMatchers("/api/**").authenticated();
-            authorize.requestMatchers("/api/**").permitAll(); // pour l'instant permis a tt le monde 
+            authorize.requestMatchers(HttpMethod.POST, "/api/user/subscribe", "/api/user/auth").permitAll();
+            // Choix du groupe : tous les CRUD pour USER et ADMIN connectés.
+            authorize.anyRequest().hasAnyAuthority("USER", "ADMIN");
         });
-
-        // Reconfiguration d'un formulaire de connexion
-        http.formLogin(Customizer.withDefaults());
-
-        // Remet le HTTP Basic
-        http.httpBasic(Customizer.withDefaults());
-
-        // Activer le filtre de validation du jeton JWT
-        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
-
-        // Désactiver la protection CSRF uniquement pour les /api/quelquechose
+        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
+            jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
+        http.exceptionHandling(errors -> errors.authenticationEntryPoint(
+            (request, response, exception) -> response.sendError(401)));
+        // Pas de cookie d'authentification sur cette chaîne API stateless.
         http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"));
-
         return http.build();
     }
 
@@ -117,33 +93,9 @@ public class SecurityConfig {
         return converter;
     }
 
-    // Ici on va gérer nos propres utilisateurs en mémoire
-    // @Bean
-    UserDetailsService inMemory() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-
-        manager.createUser(
-            User.withUsername("admin")
-                // .password("123456$")
-                .password("$2a$10$7LUTWk1B5nqyykF5vUPcF.QD4/8r77GU/BUgAzGUrGC5LY9Ypa7su")
-                .roles("ADMIN", "plusieurs")
-                .build()
-        );
-
-        manager.createUser(
-            User.withUsername("user")
-                // .password("123456$")
-                .password("$2a$10$7LUTWk1B5nqyykF5vUPcF.QD4/8r77GU/BUgAzGUrGC5LY9Ypa7su")
-                .roles("USER")
-                .build()
-        );
-
-        return manager;
-    }
-
     @Bean
     PasswordEncoder passwordEncoder() {
-        System.out.println(new BCryptPasswordEncoder().encode("123456$"));
+
         // return NoOpPasswordEncoder.getInstance();
         return new BCryptPasswordEncoder();
     }

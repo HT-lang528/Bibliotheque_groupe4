@@ -100,7 +100,7 @@ public class AvisRestControllerTest {
         Avis savedAvis = cptAvis.getValue();
         Assertions.assertEquals(4.5, savedAvis.getNote());
         Assertions.assertEquals("Très bon livre", savedAvis.getCommentaire());
-        Assertions.assertEquals(LocalDate.of(2026, 11, 6), savedAvis.getDate());
+        Assertions.assertEquals(LocalDate.now(), savedAvis.getDate());
         //Assertions.assertNotNull(savedAvis.getId()); // Après save, l'id n'est plus à 0 car auto-incrémenté
         //Assertions.assertNotEquals(0, savedAvis.getId()); // Après save, l'id n'est plus à 0 car auto-incrémenté
     }
@@ -139,7 +139,7 @@ public class AvisRestControllerTest {
         Assertions.assertEquals(id, updatedAvis.getId());
         Assertions.assertEquals(5.0, updatedAvis.getNote());
         Assertions.assertEquals("Excellent livre", updatedAvis.getCommentaire());
-        Assertions.assertEquals(LocalDate.of(2026, 11, 6), updatedAvis.getDate());
+        Assertions.assertEquals(LocalDate.now(), updatedAvis.getDate());
     }
 
     @Test

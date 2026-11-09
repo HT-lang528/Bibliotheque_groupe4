@@ -7,7 +7,7 @@ import { Auteur } from '../model/auteur';
   providedIn: 'root',
 })
 export class AuteurService {
-    private apiUrl:string="http://localhost:8080/api/auteur";
+    private apiUrl:string="/api/auteur";
     private http: HttpClient = inject(HttpClient);
     
     public findAll(): Observable<Auteur[]> {

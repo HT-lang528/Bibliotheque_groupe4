@@ -1,6 +1,5 @@
+@if (auth.token) {
 <nav aria-label="Navigation principale">
-<a routerLink="/login" routerLinkActive="active">Login</a>
-|
 <a routerLink="/home" routerLinkActive="active">Accueil</a>
 |
 <a routerLink="/livres" routerLinkActive="active">Livres</a>
@@ -10,4 +9,7 @@
 <a routerLink="/editeur" routerLinkActive="active">Editeur</a>
 |
 <a routerLink="/collection" routerLinkActive="active">Collection</a>
+<button type="button" (click)="logout()">Déconnexion</button>
 </nav>
+
+}
