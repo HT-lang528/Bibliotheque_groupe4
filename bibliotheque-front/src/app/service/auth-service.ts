@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { AuthResponse } from '../model/auth-response';
+import { Observable, tap } from 'rxjs';          // tap ajouté
 import { HttpClient } from '@angular/common/http';
 import { Auth } from '../model/auth';
+// import AuthResponse supprimé : plus utilisé
 
 @Injectable({
   providedIn: 'root', 
@@ -21,8 +21,13 @@ export class AuthService {
   constructor(private http: HttpClient) {
   }
 
-  public login(auth: Auth): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>('/user/auth', auth);
-  }
+  public login(auth: Auth): Observable<string> {
+  return this.http.post('/user/auth', auth, { responseType: 'text' }).pipe(
+    tap(token => {
+      this._token = token;
+      sessionStorage.setItem('token', token);
+    })
+  );
+}
 }
 
