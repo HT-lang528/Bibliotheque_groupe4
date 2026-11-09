@@ -1,5 +1,6 @@
 package fr.bibliotheque.restcontroller;
 import java.util.Optional;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -17,7 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import fr.bibliotheque.dao.IDAOAuteur;
 import fr.bibliotheque.model.Auteur;
-import fr.bibliotheque.model.Avis;
+
 @WebMvcTest(controllers = AuteurRestController.class)
 public class AuteurRestControllerTest {
     @Autowired
