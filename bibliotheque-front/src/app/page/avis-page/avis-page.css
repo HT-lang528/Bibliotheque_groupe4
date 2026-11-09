@@ -1,0 +1,82 @@
+.avis-page {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  color: #21322f;
+  font-family: Arial, sans-serif;
+}
+
+h1, h2 {
+  font-family: Georgia, serif;
+}
+
+.form-avis, .liste-avis {
+  margin-top: 30px;
+  padding: 20px;
+  background: white;
+  border: 1px solid #d6ded8;
+  border-radius: 6px;
+}
+
+form > div {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 13px;
+}
+
+input, textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #b9c6bc;
+  border-radius: 4px;
+}
+
+button {
+  margin: 5px;
+  padding: 10px 15px;
+  border: 1px solid #a7b8ad;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid #e3e8e3;
+}
+
+.stars {
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+
+.stars button {
+  border: none;
+  background: none;
+  font-size: 30px;
+  color: #ccc;
+  cursor: pointer;
+  padding: 2px;
+  margin: 0;
+}
+
+.stars button.selected {
+  color: #d6a83c;
+}
+
+.form-avis h2 {
+  margin-bottom: 25px;
+}

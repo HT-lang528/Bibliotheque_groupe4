@@ -6,6 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 import { Livre, LivreReferences, LivreRequest } from '../../model/livre';
 import { LivreService } from '../../service/livre-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-livre-page',
@@ -17,6 +18,7 @@ export class LivrePage implements OnInit {
   private readonly service = inject(LivreService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly title = inject(Title);
+  private readonly router = inject(Router);
   @ViewChild('deleteDialog') private deleteDialog!: ElementRef<HTMLDialogElement>;
 
   readonly livres = signal<Livre[]>([]);
@@ -42,6 +44,10 @@ export class LivrePage implements OnInit {
     this.title.setTitle('Livres · Bibliothèque');
     this.refresh();
     this.loadReferences();
+  }
+
+  voirAvis(idLivre: number): void {
+    this.router.navigate(['/avis', idLivre]);
   }
 
   refresh(): void {
@@ -116,4 +122,5 @@ export class LivrePage implements OnInit {
     if (error.status === 400) return 'Vérifie les champs du formulaire et les références sélectionnées.';
     return 'Une erreur est survenue. Réessaie dans un instant.';
   }
+
 }
