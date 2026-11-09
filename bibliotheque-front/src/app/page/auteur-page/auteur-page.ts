@@ -1,10 +1,11 @@
 import { AsyncPipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component,signal  } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuteurService } from '../../service/auteur-service';
 import { Title } from '@angular/platform-browser';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Auteur } from '../../model/auteur';
+import { Livre } from '../../model/livre';
 
 @Component({
   imports: [FormsModule, AsyncPipe ],
@@ -17,6 +18,8 @@ export class AuteurPage {
     stream: () => this.auteurService.findAll()
   });
   protected formAuteur!: Auteur;
+  protected livres = signal<Livre[]>([]);
+  protected auteurSelectionne = signal<Auteur | undefined>(undefined);
   constructor(private title: Title, private auteurService: AuteurService) {
     this.title.setTitle("Liste des auteurs");
     this.resetFormAuteur();
@@ -46,8 +49,20 @@ export class AuteurPage {
     this.formAuteur = { nom: "",prenom:"",nationalite:"" };
   }
 
+  protected afficherLivre(auteur: Auteur) {
+    if (auteur.id === this.auteurSelectionne()?.id) {
+      this.livres.set([]);
+      this.auteurSelectionne.set(undefined);
+      return;
+    }
 
-
-
-
+    this.auteurSelectionne.set(auteur);
+    this.auteurService.findLivre(auteur).subscribe(livres => {
+      this.livres.set(livres);
+    });
+  }
 }
+
+
+
+
