@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Auth } from '../../model/auth';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../service/auth-service';
@@ -14,7 +14,10 @@ export class LoginPage {
   protected formAuth = new FormGroup({
   username: new FormControl('', [Validators.required]),
   password: new FormControl('', [Validators.required]),
+  
 });
+
+  protected error = signal('');
 
   constructor(private authService: AuthService, private router: Router) { }
 
@@ -24,10 +27,9 @@ export class LoginPage {
     password: this.formAuth.value.password!,
   };
 
-  this.authService.login(auth).subscribe(resp => {
-    this.authService.token = resp.token;
-    sessionStorage.setItem('token', resp.token);
-    this.router.navigate([ 'home' ]);
-  });
+  this.authService.login(auth).subscribe({
+  next: () => this.router.navigate(['home']),
+  error: () => this.error.set('Identifiants incorrects'),
+});
   }
 }

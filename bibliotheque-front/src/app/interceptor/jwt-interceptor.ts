@@ -6,7 +6,9 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   const authService: AuthService = inject(AuthService);
 
   // Si on cherche à s'authentifier, pas d'Authorization
-  if (req.url.endsWith('/auth')) {
+  const token = authService.token;
+
+  if (!token || req.url.endsWith('/auth')) {
     return next(req);
   }
 
