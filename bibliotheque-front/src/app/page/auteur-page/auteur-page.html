@@ -1,4 +1,5 @@
-<p>Liste des Auteurs</p>
+<div>
+<H1>Liste des Auteurs</H1>
 
 <table>
     <thead>
@@ -7,6 +8,7 @@
             <th>Nom</th>
             <th>Prenom</th>
             <th>nationalite</th>
+            <th>actions</th>
 
 
         </tr>
@@ -14,20 +16,31 @@
 <tbody>
     @for(auteur of auteurs.value();track auteur.id){
 
-        <tr>
+        <tr class="auteur">
         <td>{{ auteur.nom }}</td>
         <td>{{ auteur.prenom }}</td>
         <td>{{ auteur.nationalite }}</td>
         <td>
           <button (click)="editer(auteur)">Editer</button>
           <button (click)="supprimer(auteur)">Supprimer</button>
+          <button (click)="afficherLivre(auteur)">Voir les livre</button>
         </td>
         
-      </tr>
-
-
-
+        </tr>
+     @if (auteur.id === auteurSelectionne()?.id) {
+        
+      @for (livre of livres(); track livre.id) {
+        <tr class="livre">
+           
+          <td colspan="4">↪    {{ livre.titre }}</td>
+        </tr>
+      } @empty {
+        <tr class="livre">
+          <td colspan="4">Aucun livre pour cet auteur</td>
+        </tr>
+      }
     }
+  }
 
 
 </tbody>
@@ -38,17 +51,19 @@
 
 <div>
     <div>
-        <input type="text" [(ngModel)]="formAuteur.nom" />
-        <input type="text" [(ngModel)]="formAuteur.prenom" />
-        <input type="text" [(ngModel)]="formAuteur.nationalite" />
+        <input type="text" placeholder="nom" [(ngModel)]="formAuteur.nom" />
+        <input type="text" placeholder="prenom" [(ngModel)]="formAuteur.prenom" />
+        <input type="text" placeholder="nationalité" [(ngModel)]="formAuteur.nationalite" />
     </div>
 
 <div>
     <div>
     <button (click)="ajouterOuModifier()">{{ formAuteur.id ? 'Modifier' : 'Ajouter' }}</button>
+    
 
     @if (formAuteur.id) {
       <button (click)="annulerEdition()">Annuler</button>
+      
     }
   </div>
 </div>

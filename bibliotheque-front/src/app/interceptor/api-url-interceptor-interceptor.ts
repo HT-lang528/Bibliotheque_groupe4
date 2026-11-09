@@ -1,9 +1,9 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
 export const apiUrlInterceptor: HttpInterceptorFn = (req, next) => {
-  const request = req.clone({
-    url: `http://localhost:8080/api${ req.url }`
-  });
-
-  return next(request);
+  // Le proxy Angular transmet /api au backend ; ne pas doubler le préfixe.
+  if (!req.url.startsWith('/') || req.url.startsWith('//') || req.url.startsWith('/api/')) {
+    return next(req);
+  }
+  return next(req.clone({ url: `/api${req.url}` }));
 };

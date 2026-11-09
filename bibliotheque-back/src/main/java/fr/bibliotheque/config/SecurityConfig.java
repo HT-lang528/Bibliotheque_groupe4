@@ -64,6 +64,7 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) {
         // Les API utilisent exclusivement le JWT, sans session ni HTTP Basic.
         http.securityMatcher("/api/**");
+        http.cors(Customizer.withDefaults());
         http.sessionManagement(session -> session.sessionCreationPolicy(
             org.springframework.security.config.http.SessionCreationPolicy.STATELESS));
         http.authorizeHttpRequests(authorize -> {
@@ -91,6 +92,17 @@ public class SecurityConfig {
         converter.setJwtGrantedAuthoritiesConverter(granted);
 
         return converter;
+    }
+
+    @Bean
+    org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
+        var config = new org.springframework.web.cors.CorsConfiguration();
+        config.setAllowedOrigins(java.util.List.of("http://localhost:4200", "http://127.0.0.1:4200"));
+        config.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(java.util.List.of("Authorization", "Content-Type", "Accept"));
+        var source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", config);
+        return source;
     }
 
     @Bean
